@@ -1,14 +1,18 @@
 zerops:
-  - setup: app
+  - setup: ubuntu
     build:
-      base: php@8.4
+      base: php@8.3
       buildCommands:
-        - composer install --no-dev --optimize-autoloader
+        - composer install --no-dev --optimize-autoloader --no-interaction
 
     deploy:
       public: public
       deployCommands:
-        - php artisan key:generate --force
+        - php artisan config:clear
+        - php artisan cache:clear
+        - php artisan route:clear
+        - php artisan view:clear
+        - php artisan storage:link || true
         - php artisan migrate --force
         - php artisan config:cache
         - php artisan route:cache
